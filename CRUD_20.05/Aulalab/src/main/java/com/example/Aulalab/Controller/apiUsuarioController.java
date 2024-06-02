@@ -76,8 +76,6 @@ public class apiUsuarioController {
         }
     }
 
-
-
     @DeleteMapping("/deleteUsuario/{id}")
     public void deleteUsuario(@PathVariable("id") String id) {
         usuarioServico.excluir(id);
