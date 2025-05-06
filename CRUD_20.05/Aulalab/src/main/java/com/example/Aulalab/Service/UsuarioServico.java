@@ -3,7 +3,6 @@ package com.example.Aulalab.Service;
 import com.example.Aulalab.Model.UsuarioDTO;
 import com.example.Aulalab.Model.Usuario;
 import com.example.Aulalab.Model.UsuarioRepositorio;
-import com.example.Aulalab.Model.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +20,16 @@ public class UsuarioServico implements iUsuarioServico {
 
     @Override
     public Optional<Usuario> cadastrar(UsuarioDTO user) {
-        logger.info("Serviço de cadastro iniciado");
-        Usuario usuario = dtoParaUsuario(user);
-        return Optional.ofNullable(usuarioRepositorio.save(usuario));
+        if (usuarioRepositorio.findByemail(user.email()).isPresent()) {
+            logger.error("Erro: email já cadastrado -> {}", user.email());
+            throw new RuntimeException("Email já cadastrado.");
+        } else if (user.email() == null || user.email().isBlank()) {
+            throw new IllegalArgumentException("O campo email é obrigatório.");
+        }else {
+            logger.info("Serviço de cadastro iniciado");
+            Usuario usuario = dtoParaUsuario(user);
+            return Optional.of(usuarioRepositorio.save(usuario));
+        }
     }
 
     @Override
@@ -43,10 +49,10 @@ public class UsuarioServico implements iUsuarioServico {
 
     @Override
     public Usuario validarCadastro(String email, String senha) {
-        Usuario usuario = usuarioRepositorio.findByemail(email);
-        if (usuario != null && usuario.getSenha().equals(senha)) {
+        Optional<Usuario> usuario = usuarioRepositorio.findByemail(email);
+        if (usuario.isPresent() && usuario.get().getSenha().equals(senha)) {
 
-            return usuario;
+            return usuario.orElse(null);
         } else {
 
             logger.info("Tentativa de login falhou para o usuário: {}", email);

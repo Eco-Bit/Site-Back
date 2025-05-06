@@ -24,7 +24,7 @@ public class LoadDatabase {
         logger.info("item cadastrado");
         };
     } */
-
+/*
     @Bean
     CommandLineRunner initDatabase(UsuarioRepositorio repositorio){
         return args -> {
@@ -33,5 +33,7 @@ public class LoadDatabase {
             logger.info("Cadastro realizado");
         };
     }
+
+    */
 
 }

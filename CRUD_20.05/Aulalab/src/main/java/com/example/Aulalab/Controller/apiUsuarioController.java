@@ -31,7 +31,7 @@ public class apiUsuarioController {
 
     @PostMapping("/save")
     public ResponseEntity<Object> cadastrarCliente(@RequestBody UsuarioDTO user) {
-        logger.info(">>>>>> apicontroller cadastrar produto iniciado ");
+        logger.info(">>>>>> apicontroller cadastrar iniciado ");
         try {
             Optional<Usuario> usuario = usuarioServico.cadastrar(user);
             return ResponseEntity.status(HttpStatus.CREATED).body(usuario.get());
